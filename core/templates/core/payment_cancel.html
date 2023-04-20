@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Payment Cancelled
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <article class="form form-decision">
+        <p>Forgot to add something to your cart? Shop around then come back to pay!</p>
+    </article>
+</div>
+{% endblock content %}

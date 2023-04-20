@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Inbox
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <article class="form">
+        <h4>Inbox</h4>
+        <hr/>
+        <div class="conversations">
+            
+            {% if not object_list  %}
+            <p class="empty">You'r inbox is empty</p>
+            {% else %}
+            {% for conversation in object_list %}
+            <a class="link-btn black" href="{% url 'auth:conversation' conversation.uuid %}">
+                {% for member in conversation.members.all %}
+                {% if member != request.user %}
+                <div class="conversation">
+                    
+                    <img src="{{ member.profile.image.url}}" alt="{{ member.username }}"/>
+                    
+                    <span class="content content-inbox">
+                        <p>{{ member.first_name}} {{ member.last_name}}</p>
+                        <p>{{ conversation.messages.last.content}}</p>
+                    </span>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </a>
+            {% endfor %}
+            {% endif %}
+                
+        </div>
+        
+        </div>
+    </article>
+</div>
+{% endblock content %}

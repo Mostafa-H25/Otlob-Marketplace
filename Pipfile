@@ -1,0 +1,28 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pillow = "*"
+whitenoise = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
+django-filter = "*"
+djoser = "*"
+django-crispy-forms = "*"
+django-countries = "*"
+django-phonenumber-field = {extras = ["phonenumbers"], version = "*"}
+python-decouple = "*"
+django-allauth = "*"
+crispy-bootstrap4 = "*"
+babel = "*"
+django-international = "*"
+django-babel = "*"
+stripe = "*"
+
+[dev-packages]
+autopep8 = "*"
+
+[requires]
+python_version = "3.10"

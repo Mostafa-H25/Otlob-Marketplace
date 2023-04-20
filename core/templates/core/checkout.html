@@ -1,0 +1,101 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Checkout
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <article class="form">
+        <h2>Checkout</h2>
+        <hr />
+        <h3>User Info</h3>
+        <p>Customer: {{order.user.first_name}} {{order.user.last_name}}</p>
+        <p>Phone: {{order.user.profile.phone_number}}</p>
+        <p>Email: {{order.user.email}}</p>
+        <hr />
+        <h3>Billing Address</h3>
+        <p>{{billing_address.apartment}}, {{billing_address.building}}, {{billing_address.street}}</p>
+        <p>{{billing_address.district}}, {{billing_address.city}} {{billing_address.country}}</p>
+        <hr />
+        <form method='post' class="inside-form" action="">
+            {% csrf_token %}
+            
+            {{ register.non_field_errors }}
+            
+            <h3>Shipping Address</h3>
+    
+            <p>
+                <br/>
+                <span>{{ad_form.default}}</span>
+                <label for="{{ ad_form.default.id_for_label }}">Shipping Address same as Billing Address</label>
+                {{form.default.errors}}
+            </p>
+    
+            <div id="box">
+                <br/>
+                <p class="input-main">
+                    <label for="{{ ad_form.apartment.id_for_label }}">{{ad_form.apartment.label}}</label>
+                    {{ad_form.apartment}}
+                    {{ad_form.apartment.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ ad_form.building.id_for_label }}">{{ad_form.building.label}}</label>
+                    {{ad_form.building}}
+                    {{ad_form.building.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ ad_form.street.id_for_label }}">{{ad_form.street.label}}</label>
+                    {{ad_form.street}}
+                    {{ad_form.street.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ ad_form.district.id_for_label }}">{{ad_form.district.label}}</label>
+                    {{ad_form.district}}
+                    {{ad_form.district.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ ad_form.city.id_for_label }}">{{ad_form.city.label}}</label>
+                    {{ad_form.city}}
+                    {{ad_form.city.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ ad_form.country.id_for_label }}">{{ad_form.country.label}}</label>
+                    {{ad_form.country}}
+                    {{ad_form.country.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ ad_form.zip.id_for_label }}">{{ad_form.zip.label}}</label>
+                    {{ad_form.zip}}
+                    {{ad_form.zip.errors}}
+                </p>
+            </div>
+    
+            <hr>
+            <h3>Payment method</h3>
+            <p>
+                <label for="{{ form.payment_choice.id_for_label }}">{{form.payment_choice.label}}</label>
+                {{form.payment_choice}}
+                {{form.payment_choice.errors}}
+            </p>
+    
+            <div class="float-right">
+                <a class="btn btn-danger link-btn" href="#">Cancel</a>
+                <input class="btn btn-primary" type="submit" value="Checkout">
+            </div>
+        </form>
+    </article>
+</div>
+{% endblock content %}

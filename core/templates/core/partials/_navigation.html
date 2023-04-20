@@ -1,0 +1,48 @@
+{% load static %}
+{% load cart_template_tag %}
+
+<nav>
+    <ul class="nav">
+
+        <li>
+            <a class="link-btn white" href="{% url 'core:home' %}"><span class="small-vw"><i class="fa-solid fa-house"></i> </span>Otlob</a>
+        </li>
+
+        <li>
+            <form class="search-form" action="{% url 'core:browse' %}">
+                <input type="text" name="search" id="search" value="{{search}}" placeholder="search" />
+            </form>
+        </li>
+        <li class="nav-right"></li>
+        {% if request.user.is_authenticated %}
+        <li class="nav-user">
+            <a class="link-btn white" href="{% url 'auth:profile' request.user.profile.slug %}">
+                {% if request.user.profile.image %}
+                <img class="nav-profile" src="{{ request.user.profile.image.url }}" alt="{{ request.user.profile.slug }} image">
+                {% endif %}
+                <span class="small-vw">Welcome, <strong> {{ request.user.username.capitalize }}</strong></span>
+                
+            </a>
+        </li>
+
+        <li>
+            <a class="link-btn white" href="{% url 'auth:inbox' %}"><i class="fa-solid fa-inbox"><span class="notification">{{ request.user|inbox_conversations_count}}</span></i><span class="small-vw"> Inbox</span></a>
+        </li>
+
+        <li>
+            <a class="link-btn white" href="{% url 'auth:logout' %}"><i class="fa-solid fa-right-from-bracket"></i><span class="small-vw"> Logout</span></a>
+        </li>
+        {% else %}
+        
+        <li>
+            <a class="link-btn white" href="{% url 'auth:login' %}"><i class="fa-solid fa-laptop"></i><span class="small-vw"> Account</span></a>
+        </li>
+        {% endif %} 
+
+        <li>
+            <a class="link-btn white" href="{% url 'core:order_summary' %}"><i class="fa-solid fa-cart-shopping"><span class="notification">{{ request.user|cart_items_count}}</span></i></a>
+        </li>
+        
+    </ul>
+</nav>
+

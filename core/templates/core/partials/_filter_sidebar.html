@@ -1,0 +1,73 @@
+{% load static %}
+
+<section id="categories" class="filter">
+    <h2>Filter</h2>
+    <form action="{% url 'core:browse' %}">
+        <ul>
+            <li>
+                <input type="radio" id="order_by_last" name="order_by" checked="" value="last">
+                <label for="order_by_last">Last to First</label>
+            </li>
+            <li>
+                <input type="radio" id="order_by_first" name="order_by" value="first">
+                <label for="order_by_first">First to Last</label>
+            </li>
+            <li>
+                <input type="radio" id="order_from_highest" name="order_by" value="highest">
+                <label for="order_from_highest">Highest to Lowest Price</label>
+            </li>
+            <li>
+                <input type="radio" id="order_from_lowest" name="order_by" value="lowest">
+                <label for="order_from_lowest">Lowest to Highest Price</label>
+            </li>
+        </ul>
+        <p class="input-main">
+            <input type="text" name="search" id="search" value="{{search}}" placeholder="search" />
+        </p>
+        
+        <p>
+            <span><input type="checkbox" name="hot_deals" id="hot_deals" {% if hot_deals %}checked=""{% endif %}></span>
+            <label for="hot_deals">Hot Deals</label>
+        </p>
+
+        <h3>Categories</h3>
+        {% for category in categories %}
+        <input type="radio" name="category" id="{{category}}" value="{{category.id}}">
+        <label for="{{category}}">{{category}}</label>
+        <ul>
+            {% for sub_category in sub_categories %}
+            {% if sub_category.category == category %}
+            <li>
+                <input type="radio" name="sub_category" id="{{sub_category}}" value="{{sub_category.id}}">
+                <label for="{{sub_category}}">{{sub_category}}</label>
+                <ul>
+                    {% for brand in brands %}
+                    {% if brand.sub_category == sub_category %}
+                    <li>
+                        <input type="radio" name="brand" id="{{brand}}" value="{{brand.id}}">
+                        <label for="{{brand}}">{{brand}}</label>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% endfor %}
+
+        <h2>Price</h2>
+        <p>
+            <label for="price-min">From</label>
+            <span><input class="input-small" type="number" name="price_min" id="price_min" value="{{price_min}}" min="0"></span>
+            <label for="price-max">to</label>
+            <input class="input-small" type="number" name="price_max" id="price_max" value="{{price_max}}" max="1000000">
+        </p>
+        
+
+        <div class="float-right">
+            <a class="btn btn-danger link-btn" href="{% url 'core:browse' %}">Clear</a>
+            <button class="btn btn-primary" type="submit">Filter</button>
+        </div>
+    </form>
+</section>

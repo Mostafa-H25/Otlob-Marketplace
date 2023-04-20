@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+{{object.name}}
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <article class="detail">
+        {{categories}}
+        <img class="detail-image" src="{{ object.image.url }}" alt="{{object.user.username}} profile pic"/>
+        <section>
+            <h1>
+                {{object.user.first_name}} {{object.user.last_name}}  
+            </h1>
+            <small>
+                {% if object.user == request.user %}
+                <a class="btn link-btn btn-primary" href="{% url 'auth:profile_update' object.slug %}">Edit Account</a>
+                <a class="btn link-btn btn-danger" href="{% url 'auth:profile_delete' object.user.id %}">Delete</a>
+                {% else %}
+                <a class="btn link-btn btn-info" href="{% url 'auth:conversation_create' object.slug %}">Contact
+                    {{object.user.first_name}} {{object.user.last_name}}</a>
+                {% endif %}
+            </small>
+            
+
+            <hr>
+            <h4>Address</h4>
+            <p>{{address.city}} - {{address.country}}</p>
+            <hr/>
+            {% if object.user == request.user %}
+            <p><a class="btn link-btn btn-info" href="{% url 'core:order_followup' %}">Orders</a></p>
+            <p><a class="btn link-btn btn-primary" href="{% url 'core:product_create' %}">Add Product</a></p>
+            {% endif %}
+
+        </section>
+    </article>
+    
+    <article class="related">
+            <h3>Products sold by {{object.user.first_name}} {{object.user.last_name}}</h3>
+            <hr />
+            <section class="products">
+                {% for item in items %}
+                <div>
+                    <a class="link-btn black" href="{% url 'core:product' item.slug %}">
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" />
+                        <h4>
+                            {% if item.brand %}
+                            {{ item.brand }} -
+                            {% endif %}
+                            {{ item.name }}
+                        </h4>
+                        {% if item.discount_price %}
+                        <p><span class="green">${{ item.discount_price }}</span> <small><s>${{item.price}}</s></small></p>
+                        {% else %}
+                        <p>${{item.price}}</p>
+                        {% endif %}
+                    </a>
+                </div>
+                {% endfor %}
+            </section>   
+    </article>
+</div>
+{% endblock content %}

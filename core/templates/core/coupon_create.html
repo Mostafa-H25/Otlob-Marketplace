@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Add Coupon
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <article class="form">
+        <h2>Add Coupon</h2>
+        <hr />
+
+        <form method="post" action="">
+            {% csrf_token %}
+
+            <p class="input-main">
+                <label for="{{ form.discount.id_for_label }}">{{form.discount.label}}</label>
+                {{form.discount}}
+                {{form.discount.errors}}
+            </p>
+            <p class="input-main">
+                <label for="{{ form.expire_by.id_for_label }}">{{form.expire_by.label}}</label>
+                {{form.expire_by}}
+                {{form.expire_by.errors}}
+            </p>
+            <!-- {{form.as_p}} -->
+
+
+
+            <div class="float-right">
+                <a class="btn btn-danger link-btn" href="#">Cancel</a>
+                <input class="btn btn-primary" type="submit" value="Add">
+            </div>
+        </form>
+    </article>
+</div>
+{% endblock content %}

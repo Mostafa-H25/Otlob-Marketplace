@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Order Summary
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <article class="form table-container">
+        <h2>Order Summary</h2>
+        <hr />
+        {% if not object_list %}
+        <p class="empty">There is no active Coupons.</p>
+        {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <td>#</td>
+                    <td>Code</td>
+                    <td>Created At</td>
+                    <td>Expire By</td>
+                    <td>Discount Percentage</td>
+                    <td>Expired</td>
+                </tr>
+            </thead>
+            <tbody>
+                    {% for coupon in object_list %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{coupon.code}}</td>
+                        <td>{{coupon.created_at}}</td>
+                        <td>{{coupon.expire_by}}</td>
+                        <td>{{coupon.discount}}</td>
+                        <td>
+                            <form action="{% url 'core:coupon_update' coupon.code %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="expired" id="expired" value="on">
+                                <button class="btn btn-danger" type="submit"><i class="fa-solid fa-ban"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </article>
+</div>
+{% endblock content %}

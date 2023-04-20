@@ -1,0 +1,68 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}
+Login
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <article class="form">
+
+        <div class="authentication">
+            <a class="auth auth-login link-btn black" href="{% url 'auth:login' %}">Login</a>
+            <a class="auth auth-register link-btn black" href="{% url 'auth:register' %}">Register</a>
+        </div>
+
+        <h2>Login</h2>
+
+        <form method="post" action="">
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <p class="input-main">
+                <label for="{{ form.username.id_for_label }}">{{form.username.label}}</label>
+                {{form.username}}
+                {{form.username.errors}}
+            </p>
+
+            <p class="input-main">
+                <label for="{{ form.password.id_for_label }}">{{form.password.label}}</label>
+                {{form.password}}
+                {{form.password.errors}}
+            </p>
+
+            <p>
+                <a href="{% url 'auth:password_reset' %}"><small>Forgot Password?</small></a>
+            </p>
+            <p>
+                <br>
+                <span>{{form.remember_me}}</span>
+                <label for="{{ form.remember_me.id_for_label }}">{{form.remember_me.label}}</label>
+            </p>
+            
+            <div class="clearfix">
+                <div class="float-right">
+                    <button class="btn btn-danger link-btn" type="reset">Clear</button>
+                    <button class="btn btn-primary" type="submit">Login</button>
+                </div>
+            </div>
+            </form>
+            
+            <hr />
+            <p class="middle"><small>Don't have an Account? <a href="{% url 'auth:register' %}">Create Account</a></small></p>
+    </article>
+</div>
+
+{% endblock content %}

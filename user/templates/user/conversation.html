@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <article class="form">
+        <div class="conversations">
+            {% for message in object.messages.all %}
+            <div class="message {% if request.user == message.created_by %}message-receiver{% else %} message-sender {% endif %}">
+            
+                <img src="{{ message.created_by.profile.image.url}}" alt="{{ message.created_by.username }}" width="50px">
+            
+                <span class="content {% if request.user == message.created_by %}content-receiver{% else %} content-sender {% endif %}">
+                    <p>{{ message.created_by.first_name}} {{ message.created_by.last_name}} <small><i>({{ message.created_at }})</i></small>
+                    </p>
+                    <p>{{ message.content }}</p>
+                </span>
+            </div>
+            {% endfor %}
+        </div>  
+        
+        <form method='post' action="">
+            {% csrf_token %}
+            <p class="input-main">
+                {{form.content}}
+            </p>
+            <button class="float-right btn btn-primary" type="submit">Send</button>
+        </form>
+    </article>
+</div>
+{% endblock content %}

@@ -1,0 +1,141 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}
+    Registration
+{% endblock title %}
+    
+
+{% block content %}
+    <div class="container">
+        {% if messages %}
+        <div id="message-container">
+            <ul>
+                {% for message in messages %}
+                <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <article class="form">
+
+            <div class="authentication">
+                <a class="auth auth-login link-btn black" href="{% url 'auth:login' %}">Login</a>
+                <a class="auth auth-register link-btn black" href="{% url 'auth:register' %}">Register</a>
+            </div>
+
+            <h2>Register</h2>
+            <form  method="post" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {{ register.non_field_errors }}
+                
+                <p class="input-main">
+                    <label for="{{ register.username.id_for_label }}">{{register.username.label}}</label>
+                    <span class="helptext"><small>*{{register.username.help_text}}</small></span>
+                    {{register.username}}
+                    {{register.username.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ register.email.id_for_label }}">{{register.email.label}}</label>
+                    {{register.email}}
+                    {{register.email.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ register.usfirst_nameername.id_for_label }}">{{register.first_name.label}}</label>
+                    {{register.first_name}}
+                    {{register.first_name.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ register.last_name.id_for_label }}">{{register.last_name.label}}</label>
+                    {{register.last_name}}
+                    {{register.last_name.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ register.username.id_for_label }}">{{register.password1.label}}</label>
+                    {{register.password1}}
+                    {{register.password1.errors}}
+                    {{register.password1.help_text}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ register.password.id_for_label }}">{{register.password2.label}}</label>
+                    <span class="helptext"><small>*{{register.password2.help_text}}</small></span>
+                    {{register.password2}}
+                    {{register.password2.errors}}
+                </p>
+                <hr/>
+                <p class="input-main">
+                    <label for="{{ address.apartment.id_for_label }}">{{address.apartment.label}}</label>
+                    {{address.apartment}}
+                    {{address.apartment.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ address.building.id_for_label }}">{{address.building.label}}</label>
+                    {{address.building}}
+                    {{address.building.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ address.street.id_for_label }}">{{address.street.label}}</label>
+                    {{address.street}}
+                    {{address.street.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ address.district.id_for_label }}">{{address.district.label}}</label>
+                    {{address.district}}
+                    {{address.district.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ address.city.id_for_label }}">{{address.city.label}}</label>
+                    {{address.city}}
+                    {{address.city.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ address.country.id_for_label }}">{{address.country.label}}</label>
+                    {{address.country}}
+                    {{address.country.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ address.zip.id_for_label }}">{{address.zip.label}}</label>
+                    {{address.zip}}
+                    {{address.zip.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ profile.birthday.id_for_label }}">{{profile.birthday.label}}</label>
+                    {{profile.birthday}}
+                    {{profile.birthday.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ profile.phone_number.id_for_label }}">{{profile.phone_number.label}}</label>
+                    {{profile.phone_number}}
+                    {{profile.phone_number.errors}}
+                </p>
+                <p class="input-main">
+                    <label for="{{ profile.image.id_for_label }}">{{profile.image.label}}</label>
+                    <br>
+                    {{profile.image}}
+                    {{profile.image.errors}}
+                </p>
+
+                <p>
+                    <small>
+                        By clicking Create Account, you agree to our 
+                        <a href="#">Terms & Conditions</a>, <a href="#">Privacy Policies</a> and 
+                        <a href="#">Cookies Policy</a>. You may receive SMS notifications from
+                        us and can opt out at any time.
+                    </small>
+                </p>
+
+                <div class="clearfix">
+                    <div class="float-right">
+                        <a class="btn btn-danger link-btn" href="{% url 'core:home' %}">Cancel</a>
+                        <button class="btn btn-primary" type="submit">Create Account</button>
+                    </div>
+                </div>
+
+                <hr/>
+                <p class="middle"><small>Already a member? <a href="{% url 'auth:login' %}">Login</a></small></p>
+            </form>
+        </article>
+    </div>
+{% endblock content %}
+    

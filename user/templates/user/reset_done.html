@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}
+Password Reset Done
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <article class="form form-decision">
+        <h3>Password reset complete</h3>
+
+        <p>
+            Your password has been set. You may go ahead and log in now.
+        </p>
+        <p class="auth_switch"><a href="{% url 'auth:login' %}">Login</a></p>
+    </article>
+</div>
+{% endblock content %}

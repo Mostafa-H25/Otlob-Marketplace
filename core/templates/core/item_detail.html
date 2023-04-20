@@ -1,0 +1,95 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+{{object.name}}
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <article class="detail">
+        <img class="detail-image" src="{{object.image.url}}" alt="{{object.name}}"/>
+        <section>
+            <h2>{{object.name}}</h2>
+            {% if object.brand %}
+            <p><a href="#">{{object.brand}}</a></p>
+            {% endif %}
+            <p>
+                <small><b>Sold By: <a href="{{ object.seller.profile.get_absolute_url }}">{{object.seller}}</a></b></small>
+            </p>
+            <p><b>Quantity Available: </b>{{object.quantity}}</p>
+            <p>RATING</p>
+        
+            {% if object.discount_price %}
+            <p>
+                <b>Price: </b><span class="green">${{ item.discount_price }}</span>
+                <small><s>${{object.price}}</s></small>
+            </p>
+            {% else %}
+            <p><b>Price: </b>${{object.price}}</p>
+            {% endif %}
+        
+            {% if object.description %}
+            <p><b>Description: </b><br />{{object.description}}</p>
+            {% endif %}
+            
+            
+            {% if object.seller == request.user %}
+            <a class="btn link-btn btn-primary" href="{% url 'core:product_update' object.slug %}">Edit</a>
+            <a class="btn link-btn btn-danger" href="{% url 'core:product_delete' object.slug %}">Delete</a>
+            {% else %}
+            
+            {% with next=request.path  %}
+            <form method="post" action="{% url 'core:add_to_cart' object.slug %}">
+                {% csrf_token %}
+                {{ register.non_field_errors }}
+            
+                <label for="{{ form.quantity.id_for_label }}">{{form.quantity.label}}</label>
+                <input class="input-small" type="number" name="quantity" value="1" required="" id="id_quantity">
+                {{form.quantity.errors}}
+                            
+                <button class="btn btn-info" type="submit">Add to cart</button>
+            </form>
+            {% endwith %}
+            {% endif %}
+        </section>
+    </article>
+
+    <article class="related">
+            <h4><a class="link-btn black" href="{% url 'core:browse' %}?order_by=last&search=&hot_deals=&category={{ object.category.id }}&sub_category={{ object.sub_category.id }}">Related Items</a></h4>
+            <hr/>
+            <section class="products">
+                {% for item in items %}
+                <div>
+                    <a class="link-btn black" href="{% url 'core:product' item.slug %}">
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" />
+                        <h4>
+                            {% if item.brand %}
+                            {{ item.brand }} -
+                            {% endif %}
+                            {{ item.name }}
+                        </h4>
+
+                        {% if item.discount_price %}
+                        <p>${{item.discount_price}} <small><s>${{item.price}}</s></small></p>
+                        {% else %}
+                        <p>${{item.price}}</p>
+                        {% endif %}
+                    </a>
+                </div>
+                {% endfor %}
+            </section>
+    </article>
+</div>
+{% endblock content %}

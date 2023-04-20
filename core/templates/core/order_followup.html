@@ -1,0 +1,91 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Order Summary
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <article class="form table-container">
+        <h2>Track Your Orders</h2>
+        <hr />
+
+        {% if not object_list %}
+        <p class="empty">You have no active orders.</p>
+        {% else %}
+        
+        {% for order in object_list %}
+        <h3>({{forloop.counter}})  {{order.uuid}}</h3>
+        <div class="track-bar">
+            <span class="{% if order.ordered %} green-bar {% else %} grey-bar {% endif %}"></span>
+            <span class="{% if order.shipped %} green-bar {% else %} grey-bar {% endif %}"></span>
+            <span class="{% if order.received %} green-bar {% else %} grey-bar {% endif %}"></span>
+        </div>
+        <div class="track-bar">
+            <span>Ordered</span>
+            <span>Shipped</span>
+            <span>Received</span>
+        </div>
+        <p>Ordered: <small>{{order.ordered_date}}</small></p>
+        <h3></h3>
+        <p>
+            Shipping Address: 
+            <small>
+                Apartment({{order.shipping_address.apartment}}), Building-{{order.shipping_address.building}} in {{order.shipping_address.street}} {{order.shipping_address.district}},
+                    {{order.shipping_address.city}} {{order.shipping_address.country}}
+            </small>
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <td>#</td>
+                    <td>Item</td>
+                    <td>Price</td>
+                    <td>Quantity</td>
+                    <td>Total Item Price</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for object in order.items.all %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{object.item.name}}</td>
+                    <td>${{object.item.price}}</td>
+                    <td>{{object.quantity}}</td>
+                    <td>${{object.get_total_item_price}}</td>
+                </tr>
+                {% endfor %}
+                <tr class="order-total">
+                    <td colspan="4"><b>Order Total</b></td>
+                    <td colspan="1"><b>
+        
+                            {% if order.coupon %}
+                            <small><s>${{order.get_total}}</s></small> - <span
+                                class="green">${{order.get_discount_total}}</span>
+                            {% else %}
+                            ${{order.get_total}}
+                            {% endif %}
+        
+                        </b></td>
+                </tr>
+            </tbody>
+        </table>
+        <hr/>
+        {% endfor %}
+        {% endif %}
+    </article>
+</div>
+{% endblock content %}

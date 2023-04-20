@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Buy cool new product
+<link rel="stylesheet" href="style.css">
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock title %}
+
+
+{% block content %}
+<section>
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <div class="product">
+        <img src="https://i.imgur.com/EHyR2nP.png" alt="The cover of Stubborn Attachments" />
+        <div class="description">
+            <a href="{% url 'core:create-stripe' %}">Create Stripe Account</a>
+            <h2>Order Reference Code: {{order.uuid}}</h2>
+            <h3>Shipping Address: {{order.shipping_address}}</h3>
+
+            {% for order_item in order.items.all %}
+            <p>{{forloop.counter}}. {{order_item.item.name}} <span>( ${{order_item.item.price}} x {{order_item.quantity}} = ${{object.get_total_item_price}} )</span></p>
+            {% endfor %}
+            <p><b>${{order.get_total}}</b></p>
+        </div>
+    </div>
+    <form action="/create-checkout-session/" method="POST">
+        {% csrf_token %}
+        <button type="submit" id="checkout-button">Checkout</button>
+    </form>
+</section>
+
+{% endblock content %}

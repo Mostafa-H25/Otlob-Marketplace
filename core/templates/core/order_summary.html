@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Order Summary
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <section class="form promotion">
+        <h2>Promocode</h2>
+        <hr/>
+        <form action="{% url 'core:coupon_use' %}" method="post">
+            {% csrf_token %}
+            <!-- {{form.code}} -->
+            <input class="input-large" type="text" name="code" id="id_code">
+            <input class="btn btn-info " type="submit" value="Redeem">
+        </form>
+    </section>
+    <article class="form table-container">
+        <h2>Order Summary</h2>
+        <hr/>
+
+        {% if not object_list %}
+        <p class="empty">You'r cart is empty.</p>
+        {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <td>#</td>
+                    <td>Item</td>
+                    <td>Price</td>
+                    <td>Quantity</td>
+                    <td>Total Item Price</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for object in object_list.items.all  %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{object.item.name}}</td>
+                    <td>${{object.item.price}}</td>
+                    <td>
+                        <a class="link-btn black" href="{% url 'core:item_decrease' object.item.slug %}"><i class="fa-solid fa-minus"></i></a>
+                          {{object.quantity}} 
+                        <a class="link-btn black" href="{% url 'core:item_increase' object.item.slug %}"><i class="fa-solid fa-plus"></i></a>
+                    </td>
+                    <td>
+                        ${{object.get_total_item_price}} 
+                        <a class="link-btn" href="{% url 'core:item_delete' object.item.slug %}">
+                            <small><i class="fa-solid fa-trash"></i></small>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr class="order-total">
+                    <td colspan="4"><b>Order Total</b></td>
+                    <td colspan="1"><b>
+                        
+                        {% if object_list.coupon %}
+                        <small><s>${{object_list.get_total}}</s></small> - <span class="green">${{object_list.get_discount_total}}</span>
+                        {% else %}
+                        ${{object_list.get_total}}
+                        {% endif %}                            
+
+                    </b></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="float-right">
+            <a class="btn btn-danger link-btn" href="{% url 'core:order_delete' object_list.uuid %}">Delete Cart</a>
+            <a class="btn btn-primary link-btn" href="{{ object_list.get_checkout_url }}">Proceed to Checkout</a>
+        </div>
+        {% endif %}
+    </article>
+</div>
+{% endblock content %}

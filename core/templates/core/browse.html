@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Browse
+{% endblock title %}
+
+
+{% block content %}
+
+{% include './partials/_filter_sidebar.html' %}
+
+
+<article class="main">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <h2>Browse</h2>
+
+    <hr />
+    <section class="products">
+        {% for item in object_list %}
+        <div>
+            <a class="link-btn black" href="{% url 'core:product' item.slug %}">
+                <img src="{{ item.image.url }}" alt="{{ item.name }}" />
+                <h4>
+                    {% if item.brand %}
+                    {{ item.brand }} -
+                    {% endif %}
+                    {{ item.name }}
+                </h4>
+
+                {% if item.discount_price %}
+                <p><span class="green">${{ item.discount_price }}</span> <small><s>${{ item.price }}</s></small></p>
+                {% else %}
+                <p>${{ item.price }}</p>
+                {% endif %}
+            </a>
+        </div>
+        {% endfor %}
+    </section>
+</article>
+
+{% endblock content %}

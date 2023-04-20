@@ -1,0 +1,83 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Welcome
+{% endblock title %}
+
+
+{% block content %}    
+    <div class="container">
+
+        <div class="dropdown">
+            <button class="dropbtn" onclick="burger()">Categories</button>
+            <ul id="categories-bar" class="categories-bar">
+                {% for category in categories %}
+                <li><a class="link-btn white" href="{% url 'core:browse' %}?order_by=last&search=&hot_deals=&category={{ category.id }}">{{category.name}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% if messages %}
+        <div id="message-container">
+            <ul>
+                {% for message in messages %}
+                <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <article class="related">
+            <h3><a class="link-btn black" href="{% url 'core:browse' %}?order_by=last&search=&hot_deals=on">Hot Deals</a></h3>
+            <hr/>
+            <section class="products">
+                {% for item in items %}
+                {% if forloop.counter < 11 %}
+                {% if item.discount_price %}
+                <div>
+                    <a class="link-btn black" href="{% url 'core:product' item.slug %}">
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" />
+                        <h4>
+                            {% if item.brand %}
+                            {{ item.brand }} -
+                            {% endif %}
+                            {{ item.name }}
+                        </h4>
+                        <p><span class="green">${{ item.discount_price }}</span> <small><s>${{ item.price }}</s></small></p>
+                    </a>
+                </div>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+            </section>
+        </article>
+        
+        <article class="related">
+            <h3><a class="link-btn black" href="{% url 'core:browse' %}?order_by=last">Latest</a></h3>
+            <hr />
+            <section class="products">
+                {% for item in items %}
+                {% if forloop.counter < 11 %} 
+                {% if not item.discount_price %} 
+                <div>
+                    <a class="link-btn black" href="{% url 'core:product' item.slug %}">
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" />
+                        <h4>
+                            {% if item.brand %}
+                            {{ item.brand }} -
+                            {% endif %}
+                            {{ item.name }}
+                        </h4>
+                        <p>${{ item.price }}</p>
+                    </a>
+                </div>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+            </section>
+        </article>
+    </div>
+{% endblock content %}
+    
+    

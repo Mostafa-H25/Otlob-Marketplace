@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Add Product
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+    <div id="message-container">
+        <ul>
+            {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <article class="form">    
+        <h2>Add Product</h2>
+        <hr/>
+        
+        <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <p class="input-main">
+                <label for="{{ form.name.id_for_label }}">{{form.name.label}}</label>
+                {{form.name}}
+                {{form.name.errors}}
+            </p>
+            <p class="input-main">
+                <label for="{{ form.image.id_for_label }}">{{form.image.label}}</label>
+                {{form.image}}
+                {{form.image.errors}}
+            </p>
+            <p class="input-main">
+                <label for="{{ form.category.id_for_label }}">{{form.category.label}}</label>
+                {{form.category}}
+                {{form.category.errors}}
+            </p>
+            <p class="input-main">
+                <label for="{{ form.sub_category.id_for_label }}">{{form.sub_category.label}}</label>
+                {{form.sub_category}}
+                {{form.sub_category.errors}}
+            </p>
+            <p class="input-main">
+                <label for="{{ form.brand.id_for_label }}">{{form.brand.label}}</label>
+                {{form.brand}}
+                {{form.brand.errors}}
+            </p>
+            <p class="input-main">
+                <label for="{{ form.price.id_for_label }}">{{form.price.label}}</label>
+                {{form.price}}
+                {{form.price.errors}}
+            </p>
+            <p class="input-main">
+                <label for="{{ form.quantity.id_for_label }}">{{form.quantity.label}}</label>
+                {{form.quantity}}
+                {{form.quantity.errors}}
+            </p>
+            <p class="input-main">
+                <label for="{{ form.description.id_for_label }}">{{form.description.label}}</label>
+                {{form.description}}
+                {{form.description.errors}}
+            </p>
+            <!-- {{form.as_p}} -->
+
+
+
+            <div class="float-right">
+                <a class="btn btn-danger link-btn" href="#">Cancel</a>
+                <input class="btn btn-primary" type="submit" value="Add">
+            </div>
+        </form>
+    </article>
+</div>
+{% endblock content %}
