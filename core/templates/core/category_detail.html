@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Sub-Categories List
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% include './partials/_message_notification.html' %}
+    <article class="form table-container">
+        <h2>Sub-Categories List</h2>
+        <hr />
+        {% if not queryset %}
+        <p class="empty">There are no Sub-categories.</p>
+        {% if request.user.is_superuser %}
+        <a class="btn link-btn btn-primary" href="{% url 'core:subcategory_create' %}">Add Sub-Category</a>
+        {% endif %}
+        {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <td>#</td>
+                    <td>Category</td>
+                    <td>Sub-category</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub_category in queryset %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{sub_category.category.name}}</td>
+                    <td class="table-row-right">
+                        <span>
+                            <a class="link-btn black"href="{% url 'core:subcategory_detail' sub_category.slug %}">{{sub_category.name}}</a>
+                        </span>
+                        {% if request.user.is_superuser %}
+                        <a class="btn link-btn btn-primary" href="{% url 'core:subcategory_update' sub_category.slug %}">Edit</a>
+                        <a class="btn link-btn btn-danger" href="{% url 'core:subcategory_delete' sub_category.slug %}">Delete</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if request.user.is_superuser %}
+        <a class="btn link-btn btn-primary" href="{% url 'core:subcategory_create' %}">Add Sub-Category</a>
+        {% endif %}
+        {% if is_paginated %}
+        {% include './partials/_paginator.html' %}
+        {% endif %}
+        {% endif %}
+    </article>
+
+</div>
+{% endblock content %}

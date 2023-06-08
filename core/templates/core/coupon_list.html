@@ -3,23 +3,15 @@
 
 
 {% block title %}
-Order Summary
+Coupon List
 {% endblock title %}
 
 
 {% block content %}
 <div class="container">
-    {% if messages %}
-    <div id="message-container">
-        <ul>
-            {% for message in messages %}
-            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
+    {% include './partials/_message_notification.html' %}
     <article class="form table-container">
-        <h2>Order Summary</h2>
+        <h2>Coupon List</h2>
         <hr />
         {% if not object_list %}
         <p class="empty">There is no active Coupons.</p>
@@ -54,7 +46,11 @@ Order Summary
                     {% endfor %}
                 </tbody>
             </table>
+            {% if is_paginated %}
+                {% include './partials/_paginator.html' %}
+            {% endif %}
         {% endif %}
     </article>
+    
 </div>
 {% endblock content %}

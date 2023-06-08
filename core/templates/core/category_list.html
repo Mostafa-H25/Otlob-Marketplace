@@ -1,0 +1,57 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Categories List
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% include './partials/_message_notification.html' %}
+    <article class="form table-container">
+        <h2>Categories List</h2>
+        <hr />
+        {% if not object_list %}
+        <p class="empty">There are no Categories.</p>
+        {% if request.user.is_superuser %}
+        <a class="btn link-btn btn-primary" href="{% url 'core:category_create' %}">Add Category</a>
+        {% endif %}
+        {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <td>#</td>
+                    <td>Category</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in object_list %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td class="table-row-right">
+                        <span><a class="link-btn black" href="{% url 'core:category_detail' category.slug %}">{{category.name}}</a></span>
+                        {% if request.user.is_superuser %}
+                        <a class="btn link-btn btn-primary" href="{% url 'core:category_update' category.slug %}">Edit</a>
+                        <a class="btn link-btn btn-danger" href="{% url 'core:category_delete' category.slug %}">Delete</a>
+                        {% endif %}
+                            
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if request.user.is_superuser %}
+        <a class="btn link-btn btn-primary" href="{% url 'core:category_create' %}">Add Category</a>
+        {% endif %}
+        {% if is_paginated %}
+        {% include './partials/_paginator.html' %}
+        {% endif %}
+        {% endif %}
+    </article>
+
+</div>
+{% endblock content %}

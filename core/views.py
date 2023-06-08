@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.forms import modelformset_factory, inlineformset_factory
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.contrib import messages
@@ -19,7 +20,7 @@ import uuid
 
 # from user.forms import AddressForm
 from user.models import Address
-from .forms import ItemCreateForm, OrderCreateForm, PaymentMethodForm, CouponForm, UserCouponForm, ShippingAddressForm
+from .forms import ItemCreateForm, OrderCreateForm, PaymentMethodForm, CouponForm, UserCouponForm, ShippingAddressForm, CategoryForm, SubcategoryForm, BrandForm
 from .models import Category, Subcategory, Brand, Item, OrderItem, Order, Stripe, Coupon
 
 
@@ -98,6 +99,7 @@ class SuccessView(LoginRequiredMixin, generic.TemplateView):
 class OrderFollowupView(LoginRequiredMixin, generic.ListView):
     model = Order
     template_name = 'core/order_followup.html'
+    paginate_by = 2
 
     def get_queryset(self):
         queryset = Order.objects.filter(user=self.request.user, ordered=True)
@@ -106,9 +108,9 @@ class OrderFollowupView(LoginRequiredMixin, generic.ListView):
 
 class PaymentView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
+        order = Order.objects.filter(
+            user=self.request.user, ordered=False).first()
         if self.kwargs.get('payment_method') == 'D':
-            order = Order.objects.filter(
-                user=self.request.user, ordered=False).first()
             order.ordered = True
             order.ordered_date = timezone.now()
             order.save()
@@ -119,6 +121,12 @@ class PaymentView(LoginRequiredMixin, View):
             messages.success(
                 self.request, f'Your ordered has been made. Please follow with us for any updates.')
             return redirect('core:home')
+        elif self.kwargs.get('payment_method') == 'S':
+            pass
+        elif self.kwargs.get('payment_method') == 'P':
+            pass
+        messages.warning()
+        return redirect('core:checkout', order.uuid)
 
 
 class CheckoutView(LoginRequiredMixin, UserPassesTestMixin, generic.View):
@@ -257,11 +265,13 @@ class CouponUpdateView(UserPassesTestMixin, generic.UpdateView):
 class CouponListView(UserPassesTestMixin, generic.ListView):
     model = Coupon
     template_name = 'core/coupon_list.html'
+    paginate_by = 2
 
     def get_queryset(self):
         queryset = Coupon.objects.filter(expired=False)
         if queryset is not None:
             return queryset
+        return super(CouponListView, self).get_queryset()
 
     def test_func(self):
         if self.request.user.is_superuser:
@@ -273,6 +283,163 @@ class CouponCreateView(UserPassesTestMixin, generic.CreateView):
     model = Coupon
     form_class = CouponForm
     template_name = 'core/coupon_create.html'
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+
+class BrandDeleteView(UserPassesTestMixin, generic.DeleteView):
+    model = Brand
+    template_name = 'core/brand_confirm_delete.html'
+    success_url = reverse_lazy('core:categories')
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+
+class BrandUpdateView(UserPassesTestMixin, generic.UpdateView):
+    model = Brand
+    form_class = BrandForm
+    template_name = 'core/brand_create.html'
+    success_url = reverse_lazy('core:brand')
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+
+# class BrandListView(UserPassesTestMixin, generic.ListView):
+#     model = Brand
+#     template_name = 'core/brand_list.html'
+#     paginate_by = 2
+
+#     def get_queryset(self):
+#         queryset = Brand.objects.filter(
+#             category__slug=self.kwargs.get('cat_slug'), sub_category__slug=self.kwargs.get('scat_slug'))
+#         if queryset is not None:
+#             return queryset
+#         return super(BrandListView, self).get_queryset()
+
+#     def test_func(self):
+#         if self.request.user.is_superuser:
+#             return True
+#         return False
+
+
+class BrandCreateView(UserPassesTestMixin, generic.CreateView):
+    model = Brand
+    form_class = BrandForm
+    template_name = 'core/brand_create.html'
+    success_url = reverse_lazy('core:brands')
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+
+class SubcategoryDeleteView(UserPassesTestMixin, generic.DeleteView):
+    model = Subcategory
+    template_name = 'core/subcategory_confirm_delete.html'
+    success_url = reverse_lazy('core:categories')
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+
+class SubcategoryUpdateView(UserPassesTestMixin, generic.UpdateView):
+    model = Subcategory
+    form_class = SubcategoryForm
+    template_name = 'core/subcategory_create.html'
+    success_url = reverse_lazy('core:subcategories')
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+
+class SubcategoryDetailView(View):
+    def get(self, *args, **kwargs):
+        # paginator
+        queryset = Brand.objects.filter(
+            sub_category__slug=self.kwargs.get('slug'))
+        return render(self.request, 'core/subcategory_detail.html', {'queryset': queryset})
+
+
+# class SubcategoryListView(UserPassesTestMixin, generic.ListView):
+#     model = Subcategory
+#     template_name = 'core/subcategory_list.html'
+#     paginate_by = 2
+
+#     def test_func(self):
+#         if self.request.user.is_superuser:
+#             return True
+#         return False
+
+
+class SubcategoryCreateView(UserPassesTestMixin, generic.CreateView):
+    model = Subcategory
+    form_class = SubcategoryForm
+    template_name = 'core/subcategory_create.html'
+    success_url = reverse_lazy('core:subcategories')
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+
+class CategoryDeleteView(UserPassesTestMixin, generic.DeleteView):
+    model = Category
+    template_name = 'core/category_confirm_delete.html'
+    success_url = reverse_lazy('core:categories')
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+
+class CategoryUpdateView(UserPassesTestMixin, generic.UpdateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'core/category_create.html'
+    success_url = reverse_lazy('core:categories')
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+
+class CategoryDetailView(View):
+
+    def get(self, *args, **kwargs):
+        # paginator
+        queryset = Subcategory.objects.filter(
+            category__slug=self.kwargs.get('slug'))
+        return render(self.request, 'core/category_detail.html', {'queryset': queryset})
+
+
+class CategoryListView(generic.ListView):
+    model = Category
+    template_name = 'core/category_list.html'
+    paginate_by = 2
+
+
+class CategoryCreateView(UserPassesTestMixin, generic.CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'core/category_create.html'
+    success_url = reverse_lazy('core:categories')
 
     def test_func(self):
         if self.request.user.is_superuser:
@@ -335,7 +502,7 @@ def delete_order_item(request, slug):
             return redirect("core:order_summary")
         return redirect("core:order_summary")
 
-    return render(request, 'core/item_confirm_delete.html', {'object': item, 'order': order})
+    return render(request, 'core/orderitem_confirm_delete.html', {'object': item, 'order': order})
 
 
 @ login_required()
@@ -409,6 +576,7 @@ def add_to_cart(request, slug):
 
 class ItemDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = Item
+    template_name = 'core/item_confirm_delete.html'
     success_url = reverse_lazy('core:home')
 
     def test_func(self):
@@ -452,12 +620,6 @@ class ItemCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = 'core/item_create.html'
 
     def form_valid(self, form):
-        # if not Brand.objects.filter(name=form.cleaned_data['brand']).exists():
-        #     Brand.objects.create(
-        #         name=form.cleaned_data['brand'],
-        #         category=form.cleaned_data['category'],
-        #         sub_category=form.cleaned_data['sub_category']
-        #     )
         product = form.save(commit=False)
         product.seller = self.request.user
         product.save()
@@ -467,7 +629,7 @@ class ItemCreateView(LoginRequiredMixin, generic.CreateView):
 class BrowseView(generic.ListView):
     model = Item
     template_name = 'core/browse.html'
-    paginate_by = 20
+    paginate_by = 1
 
     def get_queryset(self):
         queryset = super().get_queryset()

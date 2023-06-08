@@ -3,7 +3,7 @@ from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 
-from .models import Item, OrderItem, Coupon
+from .models import Item, OrderItem, Coupon, Category, Subcategory, Brand
 
 import json
 
@@ -21,6 +21,50 @@ PAYMENT_OPTIONS = (
     ('S', 'Stripe'),
     ('D', 'Debit'),
 )
+
+
+class BrandForm(forms.ModelForm):
+    class Meta:
+        model = Brand
+        fields = ['name', 'sub_category']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'placeholder': 'Brand Name',
+            })
+        }
+
+
+# BrandFormset = forms.inlineformset_factory(
+#     Subcategory, Brand, fields=('name',))
+
+
+class SubcategoryForm(forms.ModelForm):
+    class Meta:
+        model = Subcategory
+        fields = ['name', 'category']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'placeholder': 'Sub-Category Name',
+            })
+        }
+
+
+SubcategoryFormset = forms.inlineformset_factory(
+    Category, Subcategory, fields=('name',))
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name',]
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'placeholder': 'Category Name',
+            })
+        }
+
+
+CategoryFormset = forms.modelformset_factory(Category, fields=('name',))
 
 
 class UserCouponForm(forms.ModelForm):

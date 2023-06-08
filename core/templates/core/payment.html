@@ -11,15 +11,7 @@ Buy cool new product
 
 {% block content %}
 <section>
-    {% if messages %}
-    <div id="message-container">
-        <ul>
-            {% for message in messages %}
-            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
+    {% include './partials/_message_notification.html' %}
     <div class="product">
         <img src="https://i.imgur.com/EHyR2nP.png" alt="The cover of Stubborn Attachments" />
         <div class="description">

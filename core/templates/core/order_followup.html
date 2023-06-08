@@ -9,15 +9,7 @@ Order Summary
 
 {% block content %}
 <div class="container">
-    {% if messages %}
-    <div id="message-container">
-        <ul>
-            {% for message in messages %}
-            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
+    {% include './partials/_message_notification.html' %}
     <article class="form table-container">
         <h2>Track Your Orders</h2>
         <hr />
@@ -85,6 +77,9 @@ Order Summary
         </table>
         <hr/>
         {% endfor %}
+        {% if is_paginated %}
+            {% include './partials/_paginator.html' %}
+        {% endif %}
         {% endif %}
     </article>
 </div>

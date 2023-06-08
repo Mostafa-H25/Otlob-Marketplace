@@ -48,7 +48,6 @@ class Subcategory(models.Model):
 
 
 class Brand(models.Model):
-    category = models.ManyToManyField(Category)
     sub_category = models.ManyToManyField(Subcategory)
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(unique=True)

@@ -8,27 +8,75 @@ urlpatterns = [
 
     path('browse/', views.BrowseView.as_view(), name='browse'),
 
-    path('coupon/use', views.UseCouponView.as_view(), name='coupon_use'),
+
+
+
+    path('category/create/', views.CategoryCreateView.as_view(),
+         name='category_create'),
+
+    path('category/<slug:slug>/',
+         views.CategoryDetailView.as_view(), name='category_detail'),
+
+    path('category/<slug:slug>/delete/',
+         views.CategoryDeleteView.as_view(), name='category_delete'),
+
+    path('category/<slug:slug>/update/',
+         views.CategoryUpdateView.as_view(), name='category_update'),
+
+    path('category/', views.CategoryListView.as_view(), name='categories'),
+
+    path('sub-category/create/', views.SubcategoryCreateView.as_view(),
+         name='subcategory_create'),
+
+    path('sub-category/<slug:slug>/delete/',
+         views.SubcategoryDeleteView.as_view(), name='subcategory_delete'),
+
+    path('sub-category/<slug:slug>/update/',
+         views.SubcategoryUpdateView.as_view(), name='subcategory_update'),
+
+    path('sub-category/<slug:slug>',
+         views.SubcategoryDetailView.as_view(), name='subcategory_detail'),
+
+    #     path('sub-category/',
+    #          views.SubcategoryListView.as_view(), name='subcategories'),
+
+    path('brand/add/', views.BrandCreateView.as_view(), name='brand_add'),
+
+    path('brand/<slug:slug>/delete',
+         views.BrandDeleteView.as_view(), name='brand_delete'),
+
+    path('brand/<slug:slug>/update/',
+         views.BrandUpdateView.as_view(), name='brand_update'),
+
+    #     path('brand/', views.BrandListView.as_view(), name='brands'),
+
+
+
+
+
+
+
+    path('coupon/use/', views.UseCouponView.as_view(), name='coupon_use'),
 
     path('coupon/<uuid:pk>/update',
          views.CouponUpdateView.as_view(), name='coupon_update'),
 
     path('coupon/', views.CouponListView.as_view(), name='coupons'),
 
-    path('coupon/create', views.CouponCreateView.as_view(), name='coupon_create'),
+    path('coupon/create/', views.CouponCreateView.as_view(), name='coupon_create'),
 
     path('product/<slug:slug>/add_to_cart/',
          views.add_to_cart, name='add_to_cart'),
 
-    path('product/<slug:slug>/delete',
+    path('product/<slug:slug>/delete/',
          views.ItemDeleteView.as_view(), name='product_delete'),
 
-    path('product/<slug:slug>/update',
+    path('product/<slug:slug>/update/',
          views.ItemUpdateView.as_view(), name='product_update'),
 
-    path('product/<slug:slug>/', views.ItemDetailView.as_view(), name='product'),
-
     path('product/create/', views.ItemCreateView.as_view(), name='product_create'),
+
+    path('product/<slug:slug>/', views.ItemDetailView.as_view(), name='product'),
 
     path('order-summary/<uuid:pk>/delete/',
          views.delete_order, name='order_delete'),
@@ -47,7 +95,7 @@ urlpatterns = [
 
     path('checkout/<uuid:pk>/', views.CheckoutView.as_view(), name='checkout'),
 
-    path('payment/<payment_method>', views.PaymentView.as_view(), name='payment'),
+    path('payment/<payment_method>/', views.PaymentView.as_view(), name='payment'),
 
     path('create-checkout-session/',
          views.CreateCheckoutSessionView.as_view(), name='checkout_create'),

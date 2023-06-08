@@ -9,15 +9,7 @@
 
 {% block content %}
 <div class="container">
-    {% if messages %}
-    <div id="message-container">
-        <ul>
-            {% for message in messages %}
-            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
+    {% include 'core/partials/_message_notification.html' %}
     <article class="detail">
         {{categories}}
         <img class="detail-image" src="{{ object.image.url }}" alt="{{object.user.username}} profile pic"/>
@@ -44,6 +36,9 @@
             <p><a class="btn link-btn btn-info" href="{% url 'core:order_followup' %}">Orders</a></p>
             <p><a class="btn link-btn btn-primary" href="{% url 'core:product_create' %}">Add Product</a></p>
             {% endif %}
+            
+            
+                
 
         </section>
     </article>

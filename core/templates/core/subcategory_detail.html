@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+
+{% block title %}
+Brands List
+{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+    {% include './partials/_message_notification.html' %}
+    <article class="form table-container">
+        <h2>Brands List</h2>
+        <hr />
+        {% if not queryset %}
+        <p class="empty">There are no Brands.</p>
+        {% if request.user.is_superuser %}
+        <a class="btn link-btn btn-primary" href="{% url 'core:brand_add' %}">Add Brand</a>
+        {% endif %}
+        {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <td>#</td>
+                    <td>Category</td>
+                    <td>Sub-category</td>
+                    <td>Brand</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for brand in queryset %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{brand.sub_category.category.name}}</td>
+                    <td>{{brand.sub_category.name}}</td>
+                    <td class="table-row-right">
+                        <span>{{brand.name}}</span>
+                        {% if request.user.is_superuser %}
+                        <a class="btn link-btn btn-primary" href="{% url 'core:brand_update' brand.slug %}">Edit</a>
+                        <a class="btn link-btn btn-danger" href="{% url 'core:brand_delete' brand.slug %}">Delete</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if request.user.is_superuser %}
+        <a class="btn link-btn btn-primary" href="{% url 'core:brand_add' %}">Add Brand</a>
+        {% endif %}
+        {% if is_paginated %}
+        {% include './partials/_paginator.html' %}
+        {% endif %}
+        {% endif %}
+    </article>
+
+</div>
+{% endblock content %}

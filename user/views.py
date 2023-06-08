@@ -62,6 +62,7 @@ def create_conversation(request, slug):
 class InboxView(LoginRequiredMixin, generic.ListView):
     model = Conversation
     template_name = 'user/inbox.html'
+    paginate_by = 2
 
     def get_queryset(self):
         queryset = super(InboxView, self).get_queryset()

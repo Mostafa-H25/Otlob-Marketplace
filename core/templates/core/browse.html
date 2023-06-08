@@ -13,18 +13,10 @@ Browse
 
 
 <article class="main">
-    {% if messages %}
-    <div id="message-container">
-        <ul>
-            {% for message in messages %}
-            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
+    {% include './partials/_message_notification.html' %}
     <h2>Browse</h2>
-
     <hr />
+    
     <section class="products">
         {% for item in object_list %}
         <div>
@@ -46,6 +38,11 @@ Browse
         </div>
         {% endfor %}
     </section>
+
+    {% if is_paginated %}
+        {% include './partials/_paginator.html' %}
+    {% endif %} 
+        
 </article>
 
 {% endblock content %}

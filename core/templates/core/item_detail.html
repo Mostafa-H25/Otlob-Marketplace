@@ -9,15 +9,7 @@
 
 {% block content %}
 <div class="container">
-    {% if messages %}
-    <div id="message-container">
-        <ul>
-            {% for message in messages %}
-            <li class="alert alert-{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
+    {% include './partials/_message_notification.html' %}
     <article class="detail">
         <img class="detail-image" src="{{object.image.url}}" alt="{{object.name}}"/>
         <section>
@@ -67,7 +59,7 @@
     </article>
 
     <article class="related">
-            <h4><a class="link-btn black" href="{% url 'core:browse' %}?order_by=last&search=&hot_deals=&category={{ object.category.id }}&sub_category={{ object.sub_category.id }}">Related Items</a></h4>
+            <h4><a class="link-btn black" href="{% url 'core:browse' %}?page=1&order_by=last&search=&hot_deals=&category={{ object.category.id }}&sub_category={{ object.sub_category.id }}">Related Items</a></h4>
             <hr/>
             <section class="products">
                 {% for item in items %}

@@ -1,0 +1,23 @@
+{% load static %}
+
+<nav class="paginator"> 
+    {% if page_obj.has_previous %}
+    <a class="btn btn-danger link-btn white" href="?page=1&order_by={{ order_by }}&search={{ search }}&hot_deals={{ hot_deals }}&category={{ category.id }}&sub_category={{ sub_category.id }}&brand={{ brand.id }}&price_min={{ price_min }}&price_max={{ price_max }}">&laquo; first</a>
+    <a class="btn btn-info link-btn white" href="?page={{ page_obj.previous_page_number }}&order_by={{ order_by }}&search={{ search }}&hot_deals={{ hot_deals }}&category={{ category.id }}&sub_category={{ sub_category.id }}&brand={{ brand.id }}&price_min={{ price_min }}&price_max={{ price_max }}">Previous</a>
+    {% endif %}
+
+    {% for page_num in page_obj.paginator.page_range %}
+    {% if page_obj.number == page_num %}
+    <a class="btn btn-primary link-btn white" href="?page={{ page_obj.number }}&order_by={{ order_by }}&search={{ search }}&hot_deals={{ hot_deals }}&category={{ category.id }}&sub_category={{ sub_category.id }}&brand={{ brand.id }}&price_min={{ price_min }}&price_max={{ price_max }}">{{page_obj.number}}</a>
+    {% elif page_num < page_obj.number|add:'3' and page_num > page_obj.number|add:'-3' %}
+    <a class="btn btn-info link-btn white" href="?page={{ page_num }}&order_by={{ order_by }}&search={{ search }}&hot_deals={{ hot_deals }}&category={{ category.id }}&sub_category={{ sub_category.id }}&brand={{ brand.id }}&price_min={{ price_min }}&price_max={{ price_max }}">{{page_num}}</a>
+    {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <a class="btn btn-info link-btn white" href="?page={{ page_obj.next_page_number }}&order_by={{ order_by }}&search={{ search }}&hot_deals={{ hot_deals }}&category={{ category.id }}&sub_category={{ sub_category.id }}&brand={{ brand.id }}&price_min={{ price_min }}&price_max={{ price_max }}">Next</a>
+    <a class="btn btn-danger link-btn white" href="?page={{ page_obj.paginator.num_pages }}&order_by={{ order_by }}&search={{ search }}&hot_deals={{ hot_deals }}&category={{ category.id }}&sub_category={{ sub_category.id }}&brand={{ brand.id }}&price_min={{ price_min }}&price_max={{ price_max }}">last &raquo;</a>
+    {% endif %}
+</nav>
+
+<!-- ?order_by={{ order_by }}&search={{ search }}&hot_deals={{ hot_deals }}&category={{ category.id }}&sub_category={{ sub_category.id }}&brand={{ brand.id }}&price_min={{ price_min }}&price_max={{ price_max }}&page= -->
